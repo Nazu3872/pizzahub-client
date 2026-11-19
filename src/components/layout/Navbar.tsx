@@ -2,15 +2,19 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   Pizza,
   ShoppingBag,
   Menu,
-  X,
   User,
   Store,
   ChevronRight,
+  LogOut,
+  LayoutDashboard,
+  Settings,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,9 +32,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useSession, signOut } from "@/lib/auth-client";
 
 interface NavLink {
   label: string;
@@ -46,8 +51,34 @@ const navLinks: NavLink[] = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+
+  // Live session state from Better Auth
+  const { data: session, isPending } = useSession();
+  const user = session?.user as any;
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast.success("Signed out successfully", {
+        description: "Come back soon for more fresh pizza!",
+      });
+      router.push("/signin");
+      router.refresh();
+    } catch (err: any) {
+      toast.error("Logout Error", {
+        description: err.message || "Could not complete sign out.",
+      });
+    }
+  };
+
+  const getDashboardHref = () => {
+    if (user?.role === "admin") return "/dashboard/admin";
+    if (user?.role === "vendor") return "/dashboard/vendor";
+    return "/dashboard/customer";
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-card/90 backdrop-blur-md transition-all">
@@ -108,54 +139,99 @@ export function Navbar() {
             >
               <ShoppingBag className="h-5 w-5 text-foreground" />
               {cartCount > 0 && (
-                <Badge
-                  className="absolute -top-1.5 -right-1.5 h-5 min-w-[20px] rounded-full bg-primary px-1 text-[11px] font-bold text-primary-foreground shadow"
-                >
+                <Badge className="absolute -top-1.5 -right-1.5 h-5 min-w-[20px] rounded-full bg-primary px-1 text-[11px] font-bold text-primary-foreground shadow">
                   {cartCount}
                 </Badge>
               )}
             </Button>
           </Link>
 
-          {/* User Profile / Auth Placeholder */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-10 w-10 rounded-full border-border/80 hover:border-primary/50"
-              >
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs">
-                    <User className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 p-1.5 shadow-xl">
-              <DropdownMenuLabel className="font-semibold text-xs text-muted-foreground uppercase tracking-wider px-2 py-1.5">
-                My Account
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/login" className="cursor-pointer font-medium py-2">
+          {/* User Profile / Auth State */}
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-2 p-1.5 h-auto rounded-full hover:bg-accent cursor-pointer"
+                >
+                  <Avatar className="h-9 w-9 border border-border">
+                    <AvatarImage src={user.image} alt={user.name || "User"} />
+                    <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs uppercase">
+                      {user.name ? user.name.slice(0, 2) : "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="hidden lg:inline text-xs font-bold text-foreground max-w-[100px] truncate">
+                    {user.name || "My Account"}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-60 p-2 shadow-xl">
+                <DropdownMenuLabel className="p-2">
+                  <div className="flex flex-col space-y-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-bold leading-none text-foreground truncate">
+                        {user.name}
+                      </p>
+                      <Badge
+                        variant={user.role === "admin" ? "destructive" : "secondary"}
+                        className="text-[10px] capitalize font-bold px-1.5 py-0"
+                      >
+                        {user.role || "customer"}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={getDashboardHref()}
+                    className="cursor-pointer font-medium py-2 flex items-center gap-2.5 text-sm"
+                  >
+                    <LayoutDashboard className="h-4 w-4 text-primary" />
+                    <span>Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/profile"
+                    className="cursor-pointer font-medium py-2 flex items-center gap-2.5 text-sm"
+                  >
+                    <Settings className="h-4 w-4 text-muted-foreground" />
+                    <span>Profile Settings</span>
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className="cursor-pointer font-medium py-2 text-destructive flex items-center gap-2.5 text-sm focus:text-destructive focus:bg-destructive/10"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="hidden sm:flex items-center gap-2">
+              <Link href="/signin">
+                <Button variant="ghost" size="sm" className="font-semibold text-xs">
                   Sign In
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/register" className="cursor-pointer font-medium py-2">
-                  Create Account
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/partner" className="cursor-pointer font-medium py-2 text-secondary flex items-center justify-between">
-                  <span>Vendor Portal</span>
-                  <Store className="h-4 w-4" />
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button size="sm" className="font-semibold text-xs rounded-lg shadow-xs">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+          )}
 
           {/* Mobile Menu Trigger */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -169,7 +245,10 @@ export function Navbar() {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[360px] p-6 flex flex-col justify-between">
+            <SheetContent
+              side="right"
+              className="w-[300px] sm:w-[360px] p-6 flex flex-col justify-between"
+            >
               <div>
                 <SheetHeader className="text-left mb-6">
                   <SheetTitle className="flex items-center gap-2">
@@ -204,16 +283,68 @@ export function Navbar() {
               </div>
 
               <div className="space-y-3 pt-6 border-t border-border">
-                <Link href="/login" onClick={() => setMobileOpen(false)} className="w-full block">
-                  <Button variant="outline" className="w-full justify-center">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/register" onClick={() => setMobileOpen(false)} className="w-full block">
-                  <Button className="w-full justify-center">
-                    Get Started
-                  </Button>
-                </Link>
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-3 p-2 bg-muted/50 rounded-xl mb-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.image} alt={user.name} />
+                        <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs uppercase">
+                          {user.name ? user.name.slice(0, 2) : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm font-bold text-foreground truncate">
+                          {user.name}
+                        </span>
+                        <span className="text-xs text-muted-foreground truncate">
+                          {user.email}
+                        </span>
+                      </div>
+                    </div>
+                    <Link
+                      href={getDashboardHref()}
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full block"
+                    >
+                      <Button className="w-full justify-center gap-2">
+                        <LayoutDashboard className="h-4 w-4" />
+                        <span>Go to Dashboard</span>
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setMobileOpen(false);
+                        handleSignOut();
+                      }}
+                      className="w-full justify-center text-destructive border-destructive/30 hover:bg-destructive/10"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      <span>Logout</span>
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/signin"
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full block"
+                    >
+                      <Button variant="outline" className="w-full justify-center">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link
+                      href="/signup"
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full block"
+                    >
+                      <Button className="w-full justify-center">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </SheetContent>
           </Sheet>
