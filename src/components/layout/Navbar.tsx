@@ -15,6 +15,7 @@ import {
   LayoutDashboard,
   Settings,
   Shield,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -210,15 +211,27 @@ export function Navbar() {
                 )}
 
                 {user.role === "vendor" && (
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href="/dashboard/vendor/orders"
-                      className="cursor-pointer font-medium py-2 flex items-center gap-2.5 text-sm"
-                    >
-                      <ShoppingBag className="h-4 w-4 text-primary" />
-                      <span>Customer Orders</span>
-                    </Link>
-                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/dashboard/vendor/orders"
+                        className="cursor-pointer font-medium py-2 flex items-center gap-2.5 text-sm"
+                      >
+                        <ShoppingBag className="h-4 w-4 text-primary" />
+                        <span>Customer Orders</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/dashboard/vendor/subscription"
+                        className="cursor-pointer font-medium py-2 flex items-center gap-2.5 text-sm"
+                      >
+                        <Sparkles className="h-4 w-4 text-amber-500" />
+                        <span>Subscription Plan</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
                 )}
 
                 <DropdownMenuItem asChild>
