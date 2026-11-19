@@ -37,6 +37,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "@/lib/auth-client";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 
 interface NavLink {
   label: string;
@@ -45,9 +46,8 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Explore Pizzas", href: "/pizzas" },
-  { label: "Restaurants", href: "/restaurants" },
-  { label: "Partner with Us", href: "/partner" },
+  { label: "Explore Pizzas", href: "/menu" },
+  { label: "Partner with Us", href: "/signup?role=vendor" },
 ];
 
 export function Navbar() {
@@ -130,8 +130,8 @@ export function Navbar() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* Cart Icon */}
-          <Link href="/cart">
+          {/* Cart / Orders Icon */}
+          <Link href={user ? "/dashboard/customer/orders" : "/menu"}>
             <Button
               variant="outline"
               size="icon"
@@ -146,6 +146,9 @@ export function Navbar() {
               )}
             </Button>
           </Link>
+
+          {/* Theme Toggle (Dark/Light mode) */}
+          <ThemeToggle />
 
           {/* User Profile / Auth State */}
           {user ? (

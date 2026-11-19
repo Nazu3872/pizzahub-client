@@ -94,22 +94,22 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm text-muted-foreground">
               <li>
-                <Link href="/pizzas" className="hover:text-primary transition-colors">
+                <Link href="/menu" className="hover:text-primary transition-colors">
                   Signature Pizzas
                 </Link>
               </li>
               <li>
-                <Link href="/restaurants" className="hover:text-primary transition-colors">
+                <Link href="/menu" className="hover:text-primary transition-colors">
                   Pizzerias & Kitchens
                 </Link>
               </li>
               <li>
-                <Link href="/deals" className="hover:text-primary transition-colors">
+                <Link href="/menu" className="hover:text-primary transition-colors">
                   Special Offers
                 </Link>
               </li>
               <li>
-                <Link href="/partner" className="hover:text-primary transition-colors">
+                <Link href="/signup?role=vendor" className="hover:text-primary transition-colors">
                   Become a Vendor
                 </Link>
               </li>
@@ -123,13 +123,13 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm text-muted-foreground">
               <li>
-                <Link href="/login" className="hover:text-primary transition-colors">
+                <Link href="/signin" className="hover:text-primary transition-colors">
                   Customer Sign In
                 </Link>
               </li>
               <li>
-                <Link href="/cart" className="hover:text-primary transition-colors">
-                  Shopping Cart
+                <Link href="/dashboard/customer/orders" className="hover:text-primary transition-colors">
+                  My Orders & Deliveries
                 </Link>
               </li>
               <li>
