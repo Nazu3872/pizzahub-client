@@ -23,6 +23,7 @@ import { PageLoader } from "@/components/shared/PageLoader";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { OrderDialog } from "@/components/orders/OrderDialog";
 
 export default function MenuItemDetailPage() {
   const params = useParams();
@@ -36,6 +37,7 @@ export default function MenuItemDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<string>("");
+  const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
 
   useEffect(() => {
     // If user is not logged in after session resolves, redirect to signin
@@ -100,9 +102,11 @@ export default function MenuItemDetailPage() {
   }
 
   const handleOrder = () => {
-    toast.success(`Added ${item.itemName} to your order!`, {
-      description: "Proceed to checkout to review delivery details.",
-    });
+    if (!user) {
+      router.push(`/signin?callbackURL=/menu/${id}`);
+      return;
+    }
+    setIsOrderDialogOpen(true);
   };
 
   return (
@@ -214,16 +218,25 @@ export default function MenuItemDetailPage() {
 
             <Button
               size="lg"
-              className="w-full py-6 text-base font-bold shadow-lg gap-2.5 rounded-xl"
+              className="w-full py-6 text-base font-bold shadow-lg gap-2.5 rounded-xl cursor-pointer"
               disabled={orderDisabled}
               onClick={handleOrder}
             >
               <ShoppingBag className="h-5 w-5" />
-              <span>{orderDisabled ? "Ordering Restricted" : "Add to Order Cart"}</span>
+              <span>{orderDisabled ? "Ordering Restricted" : "Place Order / Customize"}</span>
             </Button>
           </div>
         </div>
       </div>
+
+      {/* Real Order & Payment Dialog */}
+      {item && (
+        <OrderDialog
+          item={item}
+          isOpen={isOrderDialogOpen}
+          onClose={() => setIsOrderDialogOpen(false)}
+        />
+      )}
     </PageContainer>
   );
 }

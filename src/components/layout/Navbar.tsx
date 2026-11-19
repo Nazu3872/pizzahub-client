@@ -197,6 +197,30 @@ export function Navbar() {
                   </Link>
                 </DropdownMenuItem>
 
+                {user.role === "customer" && (
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/dashboard/customer/orders"
+                      className="cursor-pointer font-medium py-2 flex items-center gap-2.5 text-sm"
+                    >
+                      <ShoppingBag className="h-4 w-4 text-primary" />
+                      <span>My Orders</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+
+                {user.role === "vendor" && (
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/dashboard/vendor/orders"
+                      className="cursor-pointer font-medium py-2 flex items-center gap-2.5 text-sm"
+                    >
+                      <ShoppingBag className="h-4 w-4 text-primary" />
+                      <span>Customer Orders</span>
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+
                 <DropdownMenuItem asChild>
                   <Link
                     href="/profile"
