@@ -4,9 +4,11 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect dashboard routes and menu item detail routes
+  // Protect dashboard routes, menu item detail routes, and payment routes
   const isProtectedRoute =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/menu/");
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/menu/") ||
+    pathname.startsWith("/payment");
 
   if (isProtectedRoute) {
     // Check for Better Auth session cookie
@@ -26,5 +28,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/menu/:path*"],
+  matcher: ["/dashboard/:path*", "/menu/:path*", "/payment/:path*"],
 };
