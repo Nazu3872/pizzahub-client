@@ -11,6 +11,7 @@ import {
   Trash2,
   Power,
   Eye,
+  ShoppingBag,
   AlertCircle,
   Clock,
   CheckCircle2,
@@ -155,6 +156,12 @@ export default function VendorDashboardPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link href="/dashboard/vendor/orders">
+            <Button variant="outline" className="rounded-xl font-bold gap-2 border-border shadow-xs cursor-pointer">
+              <ShoppingBag className="h-4 w-4 text-primary" />
+              <span>Customer Orders</span>
+            </Button>
+          </Link>
           <AddMenuItemDialog
             onItemAdded={fetchItems}
             disabled={freeLimitReached}
