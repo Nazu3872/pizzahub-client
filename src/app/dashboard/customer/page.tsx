@@ -5,38 +5,47 @@ import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import { api } from "@/lib/api";
 import { PageContainer } from "@/components/shared/PageContainer";
-import { SectionHeading } from "@/components/shared/SectionHeading";
 import { StatCard } from "@/components/shared/StatCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
+import { CustomerOverviewCharts } from "@/components/dashboard/CustomerOverviewCharts";
 import {
   ShoppingBag,
   Clock,
-  Heart,
   ShieldCheck,
   ArrowRight,
   Pizza,
-  Store,
   Calendar,
+  CheckCircle2,
+  DollarSign,
 } from "lucide-react";
 
 export default function CustomerDashboard() {
   const { data: session } = useSession();
   const user = session?.user as any;
 
-  const [orders, setOrders] = useState<any[]>([]);
+  const [stats, setStats] = useState<any | null>(null);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await api.get("/api/orders/customer");
-        if (res.success && Array.isArray(res.data)) {
-          setOrders(res.data);
+        setLoading(true);
+        const [statsRes, ordersRes] = await Promise.all([
+          api.get("/api/customer/stats"),
+          api.get("/api/orders/customer"),
+        ]);
+
+        if (statsRes.success && statsRes.data) {
+          setStats(statsRes.data);
+        }
+        if (ordersRes.success && Array.isArray(ordersRes.data)) {
+          setRecentOrders(ordersRes.data.slice(0, 4));
         }
       } catch (err) {
-        // silent fail on overview
+        // silent fail
       } finally {
         setLoading(false);
       }
@@ -44,8 +53,10 @@ export default function CustomerDashboard() {
     loadData();
   }, []);
 
-  const totalOrders = orders.length;
-  const activeOrders = orders.filter((o) => o.status === "pending" || o.status === "accepted").length;
+  const totalOrders = stats?.totalOrders || 0;
+  const pendingOrders = stats?.pendingOrders || 0;
+  const acceptedOrders = stats?.acceptedOrders || 0;
+  const totalSpent = stats?.totalSpent || 0;
 
   return (
     <PageContainer>
@@ -58,7 +69,7 @@ export default function CustomerDashboard() {
             <Badge variant="secondary">Customer</Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            Welcome back, <span className="font-semibold text-foreground">{user?.name || "Pizza Lover"}</span>!
+            Welcome back, <span className="font-semibold text-foreground">{user?.name || "Pizza Lover"}</span>! Track your pizza orders in real-time.
           </p>
         </div>
 
@@ -77,39 +88,45 @@ export default function CustomerDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      {/* Real Aggregated Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Total Orders"
-          value={String(totalOrders)}
+          value={loading ? "--" : totalOrders}
           description="Pizzas ordered to date"
           icon={<ShoppingBag className="h-5 w-5 text-primary" />}
         />
         <StatCard
-          title="Active Orders"
-          value={String(activeOrders)}
-          description="Pending & baking"
+          title="Pending Review"
+          value={loading ? "--" : pendingOrders}
+          description="Awaiting kitchen confirmation"
           icon={<Clock className="h-5 w-5 text-amber-500" />}
         />
         <StatCard
-          title="Artisan Menus"
-          value="10+"
-          description="Authentic recipes ready"
-          icon={<Pizza className="h-5 w-5 text-secondary" />}
+          title="Accepted & Baking"
+          value={loading ? "--" : acceptedOrders}
+          description="In the kitchen oven"
+          icon={<CheckCircle2 className="h-5 w-5 text-emerald-600" />}
         />
         <StatCard
-          title="Account Status"
-          value="Active"
-          description="Verified Member"
-          icon={<ShieldCheck className="h-5 w-5 text-emerald-600" />}
+          title="Total Spent"
+          value={loading ? "--" : formatCurrency(totalSpent)}
+          description="Simulated pizza payments"
+          icon={<DollarSign className="h-5 w-5 text-emerald-600" />}
         />
       </div>
 
-      {/* Recent Orders Section */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+      {/* Interactive Recharts Graph */}
+      {stats?.ordersChart && (
+        <CustomerOverviewCharts ordersChart={stats.ordersChart} />
+      )}
+
+      {/* Recent Activity */}
+      <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4 pb-3 border-b border-border">
           <h3 className="text-lg font-bold font-heading text-foreground flex items-center gap-2">
             <Clock className="h-5 w-5 text-primary" />
-            <span>Recent Activity</span>
+            <span>Recent Orders</span>
           </h3>
           <Link
             href="/dashboard/customer/orders"
@@ -122,7 +139,7 @@ export default function CustomerDashboard() {
 
         {loading ? (
           <p className="text-xs text-muted-foreground py-4">Loading your orders...</p>
-        ) : orders.length === 0 ? (
+        ) : recentOrders.length === 0 ? (
           <div className="text-center py-8 space-y-3">
             <p className="text-sm text-muted-foreground">No recent orders found.</p>
             <Link href="/menu">
@@ -133,22 +150,22 @@ export default function CustomerDashboard() {
           </div>
         ) : (
           <div className="space-y-3">
-            {orders.slice(0, 3).map((order) => (
+            {recentOrders.map((order) => (
               <div
                 key={order.id || order._id}
-                className="flex items-center justify-between p-3.5 rounded-xl bg-muted/40 hover:bg-muted/70 transition-colors border border-border/60"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-muted/40 hover:bg-muted/70 transition-colors border border-border/60"
               >
                 <div className="flex items-center gap-3">
                   <img
                     src={order.item?.images?.[0] || order.item?.image || "https://images.unsplash.com/photo-1513104890138-7c749659a591"}
                     alt={order.item?.itemName}
-                    className="h-10 w-10 rounded-lg object-cover"
+                    className="h-10 w-10 rounded-xl object-cover"
                   />
                   <div>
                     <p className="font-bold text-sm text-foreground">{order.item?.itemName}</p>
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      <span>{order.deliveryDate}</span>
+                      <span>Delivery: {order.deliveryDate}</span>
                     </p>
                   </div>
                 </div>

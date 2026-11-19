@@ -38,6 +38,7 @@ import {
 import { AddMenuItemDialog } from "@/components/vendor/AddMenuItemDialog";
 import { EditMenuItemDialog } from "@/components/vendor/EditMenuItemDialog";
 import { DeleteMenuItemDialog } from "@/components/vendor/DeleteMenuItemDialog";
+import { VendorOverviewCharts } from "@/components/dashboard/VendorOverviewCharts";
 
 export default function VendorDashboardPage() {
   const { data: session } = useSession();
@@ -45,6 +46,7 @@ export default function VendorDashboardPage() {
   const isPremium = user?.subscriptionPlan === "premium";
 
   const [items, setItems] = useState<any[]>([]);
+  const [stats, setStats] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Modal dialog states
@@ -56,9 +58,15 @@ export default function VendorDashboardPage() {
   const fetchItems = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await api.get("/vendor/menu-items");
-      if (res.success && res.data) {
-        setItems(res.data);
+      const [menuRes, statsRes] = await Promise.all([
+        api.get("/vendor/menu-items"),
+        api.get("/api/vendor/stats"),
+      ]);
+      if (menuRes.success && menuRes.data) {
+        setItems(menuRes.data);
+      }
+      if (statsRes.success && statsRes.data) {
+        setStats(statsRes.data);
       }
     } catch (err: any) {
       toast.error("Failed to Load Menu", {
@@ -232,6 +240,14 @@ export default function VendorDashboardPage() {
           icon={<Sparkles className="h-5 w-5 text-secondary" />}
         />
       </div>
+
+      {/* Visual Recharts Overview */}
+      {stats && stats.orderStatusChart && stats.catalogChart && (
+        <VendorOverviewCharts
+          orderStatusChart={stats.orderStatusChart}
+          catalogChart={stats.catalogChart}
+        />
+      )}
 
       {/* Menu Items Table */}
       <Card className="border-border/80 shadow-sm overflow-hidden">
