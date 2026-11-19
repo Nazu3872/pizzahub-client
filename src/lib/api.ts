@@ -1,3 +1,5 @@
+import { authClient } from "./auth-client";
+
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   (typeof window !== "undefined"
@@ -25,13 +27,14 @@ export class ApiError extends Error {
 
 interface RequestOptions extends RequestInit {
   token?: string;
+  skipAuth?: boolean;
 }
 
 async function request<T = any>(
   endpoint: string,
   options: RequestOptions = {}
 ): Promise<ApiResponse<T>> {
-  const { token, headers, ...restOptions } = options;
+  const { token, skipAuth, headers, ...restOptions } = options;
 
   const url = endpoint.startsWith("http")
     ? endpoint
@@ -43,8 +46,20 @@ async function request<T = any>(
     ...(headers as Record<string, string>),
   };
 
-  if (token) {
-    requestHeaders["Authorization"] = `Bearer ${token}`;
+  // Attach JWT token automatically for private calls
+  if (!skipAuth) {
+    if (token) {
+      requestHeaders["Authorization"] = `Bearer ${token}`;
+    } else if (typeof window !== "undefined") {
+      try {
+        const tokenRes = await (authClient as any).token?.();
+        if (tokenRes?.data?.token) {
+          requestHeaders["Authorization"] = `Bearer ${tokenRes.data.token}`;
+        }
+      } catch (e) {
+        // Fallback silently if token fetch fails (e.g. unauthenticated)
+      }
+    }
   }
 
   try {
