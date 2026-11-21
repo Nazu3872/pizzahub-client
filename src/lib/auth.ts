@@ -31,14 +31,13 @@ const dbName = process.env.DB_NAME || "pizzahub";
 
 let client: MongoClient;
 
-if (process.env.NODE_ENV === "production") {
-  client = new MongoClient(mongoUri);
-} else {
-  if (!global._mongoClientAuth) {
-    global._mongoClientAuth = new MongoClient(mongoUri);
-  }
-  client = global._mongoClientAuth;
+if (!global._mongoClientAuth) {
+  global._mongoClientAuth = new MongoClient(mongoUri, {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+  });
 }
+client = global._mongoClientAuth;
 
 const db = client.db(dbName);
 
