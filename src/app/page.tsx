@@ -16,6 +16,11 @@ import {
   ChefHat,
   Truck,
   HeartHandshake,
+  Leaf,
+  Beef,
+  Award,
+  Sandwich,
+  Coffee,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,36 +32,30 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
 import { MENU_CATEGORIES } from "@/components/vendor/AddMenuItemDialog";
 
-// Category metadata with icons & background highlights
-const categoryVisuals: Record<string, { emoji: string; color: string; desc: string }> = {
+// Category metadata with clean line icons & artisan descriptions
+const categoryVisuals: Record<string, { icon: React.ComponentType<{ className?: string }>; desc: string }> = {
   "Classic Pizzas": {
-    emoji: "🍕",
-    color: "from-red-500/10 to-orange-500/10",
+    icon: Pizza,
     desc: "Napoletana, Margherita & Marinara",
   },
   "Vegetarian Pizzas": {
-    emoji: "🥗",
-    color: "from-emerald-500/10 to-teal-500/10",
-    desc: "Fresh veggies, artichoke & rich pesto",
+    icon: Leaf,
+    desc: "Fresh veggies, artichoke & basil pesto",
   },
   "Meat Lovers": {
-    emoji: "🥩",
-    color: "from-amber-500/10 to-red-500/10",
+    icon: Beef,
     desc: "Crispy pepperoni, smoked bacon & beef",
   },
   "Specialty / Gourmet Pizzas": {
-    emoji: "✨",
-    color: "from-purple-500/10 to-pink-500/10",
+    icon: Award,
     desc: "White truffle, fontina & prosciutto",
   },
   "Sides & Appetizers": {
-    emoji: "🧄",
-    color: "from-yellow-500/10 to-orange-500/10",
-    desc: "Garlic knots, wings & cheesy breadsticks",
+    icon: Sandwich,
+    desc: "Garlic knots, wings & breadsticks",
   },
   "Beverages & Desserts": {
-    emoji: "🍰",
-    color: "from-orange-500/10 to-amber-500/10",
+    icon: Coffee,
     desc: "Mascarpone tiramisu & Italian sodas",
   },
 };
@@ -109,35 +108,33 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. Hero Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-cream-100 via-background to-background py-16 sm:py-24 border-b border-border/50">
-        <div className="absolute inset-0 bg-[radial-gradient(#F57C00_1px,transparent_1px)] [background-size:24px_24px] opacity-15" />
-
+      <section className="relative overflow-hidden bg-background py-16 sm:py-24 border-b border-border/70">
         <PageContainer className="relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Column Content */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.4 }}
               className="lg:col-span-7 space-y-6 text-center lg:text-left"
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-3.5 py-1 text-xs font-bold text-orange-800 shadow-xs">
-                <Sparkles className="h-3.5 w-3.5 text-secondary animate-pulse" />
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-accent/60 px-3 py-1 text-xs font-medium text-foreground">
+                <Sparkles className="h-3.5 w-3.5 text-primary" />
                 <span>Wood-Fired Artisanal Platform</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-heading tracking-tight text-foreground leading-[1.1]">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading tracking-tight text-foreground leading-[1.15]">
                 Hot & Fresh Pizza{" "}
-                <span className="text-primary inline-block">Delivered to Your Door</span>.
+                <span className="text-primary inline-block">Delivered to Your Door</span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Connect directly with independent local pizzerias. Handcrafted organic dough, slow-simmered tomato coulis, and authentic oven-baked crusts.
+              <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                Connect directly with independent local pizzerias. Handcrafted organic dough, slow-simmered tomato coulis, and authentic stone oven crusts.
               </p>
 
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
                 <Link href="/menu">
-                  <Button size="lg" className="gap-2.5 rounded-xl shadow-md text-base px-6">
+                  <Button size="lg" className="gap-2 rounded-lg text-sm px-5 font-medium shadow-xs">
                     <span>Explore Pizza Menu</span>
                     <ArrowRight className="h-4 w-4" />
                   </Button>
@@ -147,23 +144,23 @@ export default function HomePage() {
                   <Button
                     variant="outline"
                     size="lg"
-                    className="gap-2 rounded-xl text-base px-6 border-border hover:bg-muted"
+                    className="gap-2 rounded-lg text-sm px-5 font-medium border-border hover:bg-muted"
                   >
-                    <Store className="h-4 w-4 text-secondary" />
+                    <Store className="h-4 w-4 text-primary" />
                     <span>Join as Vendor</span>
                   </Button>
                 </Link>
               </div>
 
               {/* Trust Badges */}
-              <div className="pt-6 border-t border-border/70 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-muted-foreground font-semibold">
+              <div className="pt-6 border-t border-border/70 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-muted-foreground font-medium">
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4 text-primary" />
                   <span>Avg. 25 Min Delivery</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Flame className="h-4 w-4 text-secondary" />
-                  <span>Wood-Fired Crusts</span>
+                  <Flame className="h-4 w-4 text-primary" />
+                  <span>800°F Stone Oven</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <ShieldCheck className="h-4 w-4 text-emerald-600" />
@@ -174,23 +171,23 @@ export default function HomePage() {
 
             {/* Right Hero Visual */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
               className="lg:col-span-5 relative flex justify-center"
             >
-              <div className="relative w-full max-w-md aspect-square rounded-3xl overflow-hidden shadow-2xl border-4 border-card/80 group">
+              <div className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden shadow-sm border border-border/80">
                 <img
                   src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80"
                   alt="Hot & Fresh Artisan Pizza"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
-                  <Badge className="bg-primary text-white border-0 font-bold mb-1">
-                    Featured Special
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5 text-white space-y-1">
+                  <Badge className="bg-primary text-white border-0 font-medium mb-1 text-[11px]">
+                    800°F Stone Oven
                   </Badge>
-                  <h3 className="text-xl font-bold font-heading">
+                  <h3 className="text-lg font-bold font-heading">
                     Wood-Fired Quattro Formaggi
                   </h3>
                   <p className="text-xs text-white/80">
@@ -266,32 +263,36 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {MENU_CATEGORIES.map((cat, idx) => {
-              const meta = categoryVisuals[cat] || { emoji: "🍕", color: "from-primary/10 to-orange-500/10", desc: "Fresh artisan pizza" };
+              const meta = categoryVisuals[cat] || {
+                icon: Pizza,
+                desc: "Fresh artisan pizza",
+              };
+              const IconComp = meta.icon;
               return (
                 <motion.div
                   key={cat}
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.05 }}
+                  transition={{ duration: 0.3, delay: idx * 0.04 }}
                 >
                   <Link
                     href={`/menu?category=${encodeURIComponent(cat)}`}
-                    className="group block p-6 rounded-2xl border border-border/80 bg-card hover:border-primary/40 hover:shadow-lg transition-all duration-300"
+                    className="group block p-5 rounded-xl border border-border/80 bg-card hover:border-primary/50 hover:shadow-xs transition-[border-color,box-shadow] duration-200"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent text-3xl shadow-xs group-hover:scale-110 transition-transform">
-                        {meta.emoji}
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-accent text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                        <IconComp className="h-6 w-6" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-heading font-bold text-lg text-foreground group-hover:text-primary transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-heading font-bold text-base text-foreground group-hover:text-primary transition-colors truncate">
                           {cat}
                         </h3>
                         <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
                           {meta.desc}
                         </p>
                       </div>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
                     </div>
                   </Link>
                 </motion.div>
@@ -302,20 +303,20 @@ export default function HomePage() {
       </section>
 
       {/* 4. Why Choose PizzaHub? (Required Extra Section 1) */}
-      <section className="py-16 sm:py-24 bg-card/60 border-t border-border/50">
+      <section className="py-16 sm:py-24 bg-card/40 border-t border-border/70">
         <PageContainer>
           <SectionHeading
-            badge="The PizzaHub Advantage"
+            badge="The PizzaHub Craft"
             title="Why Choose PizzaHub?"
-            subtitle="We are committed to delivering the ultimate authentic pizza experience, straight from the oven to your dining table."
+            subtitle="We connect local artisan kitchens directly to your table, maintaining real wood-fired baking standards."
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 shadow-xs">
-                <Flame className="h-6 w-6" />
+            <div className="flex flex-col p-6 rounded-xl bg-card border border-border/80 hover:border-primary/50 transition-[border-color] duration-200">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <Flame className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+              <h3 className="text-base font-bold font-heading text-foreground mb-1.5">
                 Authentic Wood-Fired
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -323,11 +324,11 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-600 mb-4 shadow-xs">
-                <ChefHat className="h-6 w-6" />
+            <div className="flex flex-col p-6 rounded-xl bg-card border border-border/80 hover:border-primary/50 transition-[border-color] duration-200">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <ChefHat className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+              <h3 className="text-base font-bold font-heading text-foreground mb-1.5">
                 Independent Artisans
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -335,11 +336,11 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 mb-4 shadow-xs">
-                <ShieldCheck className="h-6 w-6" />
+            <div className="flex flex-col p-6 rounded-xl bg-card border border-border/80 hover:border-primary/50 transition-[border-color] duration-200">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <ShieldCheck className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+              <h3 className="text-base font-bold font-heading text-foreground mb-1.5">
                 Premium Ingredients
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -347,11 +348,11 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/10 text-secondary mb-4 shadow-xs">
-                <Truck className="h-6 w-6" />
+            <div className="flex flex-col p-6 rounded-xl bg-card border border-border/80 hover:border-primary/50 transition-[border-color] duration-200">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <Truck className="h-5 w-5" />
               </div>
-              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+              <h3 className="text-base font-bold font-heading text-foreground mb-1.5">
                 Thermal Express Delivery
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -363,47 +364,47 @@ export default function HomePage() {
       </section>
 
       {/* 5. How PizzaHub Works (Extra Section 2) */}
-      <section className="py-16 sm:py-24 border-t border-border/50">
+      <section className="py-16 sm:py-24 border-t border-border/70">
         <PageContainer>
           <SectionHeading
-            badge="Simple 3-Step Process"
+            badge="Three Step Process"
             title="How PizzaHub Works"
-            subtitle="Ordering authentic artisan pizza has never been faster or easier."
+            subtitle="Ordering authentic artisan pizza straight from stone hearth to table."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-card border border-border shadow-xs">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-5 shadow-xs">
-                <ChefHat className="h-8 w-8" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-card border border-border/80">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <ChefHat className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold font-heading text-foreground mb-2">
+              <h3 className="text-lg font-bold font-heading text-foreground mb-2">
                 1. Pick Local Artisan Pizzerias
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Browse handpicked local kitchens using organic dough, fresh mozzarella, and stone-fired ovens.
               </p>
             </div>
 
-            <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-card border border-border shadow-xs">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/10 text-secondary mb-5 shadow-xs">
-                <Flame className="h-8 w-8" />
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-card border border-border/80">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <Flame className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold font-heading text-foreground mb-2">
+              <h3 className="text-lg font-bold font-heading text-foreground mb-2">
                 2. Freshly Baked to Order
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Your selected pizza is stretched and baked hot at 800°F immediately upon order confirmation.
               </p>
             </div>
 
-            <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-card border border-border shadow-xs">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 mb-5 shadow-xs">
-                <Truck className="h-8 w-8" />
+            <div className="flex flex-col items-center text-center p-6 rounded-xl bg-card border border-border/80">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4">
+                <Truck className="h-6 w-6" />
               </div>
-              <h3 className="text-xl font-bold font-heading text-foreground mb-2">
+              <h3 className="text-lg font-bold font-heading text-foreground mb-2">
                 3. Piping Hot Delivery
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Packaged in insulated thermal pizza carriers and delivered directly to your doorstep in 25 minutes.
               </p>
             </div>

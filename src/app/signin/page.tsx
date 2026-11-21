@@ -111,12 +111,12 @@ export default function SignInPage() {
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md border-border/80 bg-card shadow-xl">
+      <Card className="w-full max-w-md border-border/80 bg-card shadow-xs rounded-xl">
         <CardHeader className="space-y-2 text-center pb-6">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-lg shadow-primary/25 mb-2">
-            <Pizza className="h-7 w-7" />
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs mb-2">
+            <Pizza className="h-6 w-6 stroke-[2.2]" />
           </div>
-          <CardTitle className="text-2xl sm:text-3xl font-extrabold font-heading">
+          <CardTitle className="text-2xl font-bold font-heading">
             Sign In to PizzaHub
           </CardTitle>
           <CardDescription className="text-sm">

@@ -82,17 +82,17 @@ export function DashboardShell({ children }: SidebarProps) {
         {/* Brand */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 px-3 py-2 transition-transform hover:scale-[1.02]"
+          className="flex items-center gap-2.5 px-3 py-2 group"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-md shadow-primary/20">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs transition-colors group-hover:bg-primary/95">
             <Pizza className="h-5 w-5" />
           </div>
           <div>
-            <span className="font-heading text-xl font-black text-foreground flex items-center">
+            <span className="font-heading text-lg font-bold text-foreground flex items-center">
               Pizza<span className="text-primary">Hub</span>
             </span>
-            <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block -mt-1">
-              {role} Portal
+            <span className="text-[11px] font-medium text-muted-foreground capitalize block -mt-0.5">
+              {role} portal
             </span>
           </div>
         </Link>

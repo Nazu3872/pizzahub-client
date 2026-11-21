@@ -216,10 +216,10 @@ function MenuCatalogContent() {
         <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
           <button
             onClick={() => handleCategoryClick("all")}
-            className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+            className={`whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
               category === "all"
-                ? "bg-primary text-primary-foreground shadow-xs font-bold"
-                : "bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
+                ? "bg-primary text-primary-foreground shadow-xs"
+                : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
             }`}
           >
             All Items
@@ -228,10 +228,10 @@ function MenuCatalogContent() {
             <button
               key={cat}
               onClick={() => handleCategoryClick(cat)}
-              className={`whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+              className={`whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                 category === cat
-                  ? "bg-primary text-primary-foreground shadow-xs font-bold"
-                  : "bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               {cat}

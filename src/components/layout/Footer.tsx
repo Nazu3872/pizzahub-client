@@ -32,11 +32,11 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
           {/* Brand Info & Mission */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-md">
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs transition-colors group-hover:bg-primary/95">
                 <Pizza className="h-5 w-5" />
               </div>
-              <span className="font-heading text-2xl font-black tracking-tight text-foreground">
+              <span className="font-heading text-xl font-bold tracking-tight text-foreground">
                 Pizza<span className="text-primary">Hub</span>
               </span>
             </Link>

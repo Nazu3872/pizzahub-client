@@ -87,17 +87,16 @@ export function Navbar() {
         {/* Brand Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          className="flex items-center gap-2.5 group"
         >
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-orange-600 text-white shadow-md shadow-primary/20">
-            <Pizza className="h-6 w-6 stroke-[2.2]" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs transition-colors group-hover:bg-primary/95">
+            <Pizza className="h-5 w-5 stroke-[2.2]" />
           </div>
           <div className="flex flex-col">
-            <span className="font-heading text-2xl font-black tracking-tight text-foreground flex items-center">
+            <span className="font-heading text-xl font-bold tracking-tight text-foreground flex items-center">
               Pizza<span className="text-primary">Hub</span>
-              <span className="ml-1 h-2 w-2 rounded-full bg-secondary inline-block animate-pulse" />
             </span>
-            <span className="text-[10px] font-semibold tracking-wider text-muted-foreground uppercase -mt-1">
+            <span className="text-[11px] font-medium text-muted-foreground -mt-0.5">
               Fresh & Artisanal
             </span>
           </div>

@@ -120,17 +120,17 @@ export default function MenuItemDetailPage() {
         <span>Back to Menu Catalog</span>
       </Link>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 bg-card p-6 sm:p-10 rounded-3xl border border-border/80 shadow-md">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 bg-card p-6 sm:p-8 rounded-2xl border border-border/80 shadow-xs">
         {/* Left: Image Gallery */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-muted border border-border shadow-inner">
+          <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-muted border border-border">
             <img
               src={selectedImage || item.images?.[0]}
               alt={item.itemName}
-              className="h-full w-full object-cover transition-all duration-300"
+              className="h-full w-full object-cover"
             />
-            <div className="absolute top-4 left-4">
-              <Badge className="bg-primary text-primary-foreground font-bold px-3 py-1 text-xs shadow-md">
+            <div className="absolute top-3 left-3">
+              <Badge className="bg-primary text-primary-foreground font-medium px-2.5 py-0.5 text-xs border-0">
                 {item.category}
               </Badge>
             </div>
@@ -138,14 +138,14 @@ export default function MenuItemDetailPage() {
 
           {/* Multiple Images Thumbnail Strip */}
           {item.images && item.images.length > 1 && (
-            <div className="flex items-center gap-3 overflow-x-auto pt-2">
+            <div className="flex items-center gap-2.5 overflow-x-auto pt-2">
               {item.images.map((img: string, idx: number) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(img)}
-                  className={`relative h-20 w-20 rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
+                  className={`relative h-18 w-18 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer ${
                     selectedImage === img
-                      ? "border-primary ring-2 ring-primary/20 scale-105"
+                      ? "border-primary"
                       : "border-border/80 opacity-70 hover:opacity-100"
                   }`}
                 >
@@ -163,18 +163,18 @@ export default function MenuItemDetailPage() {
         {/* Right: Details & Order Box */}
         <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-muted-foreground">
               <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md">
                 <Store className="h-3.5 w-3.5 text-primary" />
                 <span>{item.vendorName || "Artisan Kitchen"}</span>
               </span>
               <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md">
-                <MapPin className="h-3.5 w-3.5 text-secondary" />
+                <MapPin className="h-3.5 w-3.5 text-primary" />
                 <span>{item.location}</span>
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black font-heading text-foreground tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-heading text-foreground tracking-tight leading-tight">
               {item.itemName}
             </h1>
 

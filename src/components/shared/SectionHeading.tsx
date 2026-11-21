@@ -36,18 +36,18 @@ export function SectionHeading({
       {badge && (
         <Badge
           variant="secondary"
-          className="mb-3 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-orange-100 text-orange-800 border-orange-200"
+          className="mb-3 px-3 py-1 text-xs font-medium tracking-normal bg-accent text-accent-foreground border-border/80"
         >
           {badge}
         </Badge>
       )}
       <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-4">
         <div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold font-heading text-foreground tracking-tight">
             {title}
           </h2>
           {subtitle && (
-            <p className="mt-2.5 text-base sm:text-lg text-muted-foreground leading-relaxed">
+            <p className="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
               {subtitle}
             </p>
           )}
