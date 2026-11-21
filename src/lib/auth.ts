@@ -46,6 +46,11 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
   secret: process.env.BETTER_AUTH_SECRET || "default_development_secret_pizzahub_2026",
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  trustedOrigins: [
+    process.env.BETTER_AUTH_URL || "http://localhost:3000",
+    "https://*.vercel.app",
+    "http://localhost:3000",
+  ],
 
   user: {
     additionalFields: {
