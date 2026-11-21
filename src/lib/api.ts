@@ -52,9 +52,29 @@ async function request<T = any>(
       requestHeaders["Authorization"] = `Bearer ${token}`;
     } else if (typeof window !== "undefined") {
       try {
-        const tokenRes = await (authClient as any).token?.();
-        if (tokenRes?.data?.token) {
-          requestHeaders["Authorization"] = `Bearer ${tokenRes.data.token}`;
+        let jwtToken: string | undefined;
+
+        // 1. Try authClient.token() if exposed
+        if (typeof (authClient as any).token === "function") {
+          const res = await (authClient as any).token();
+          jwtToken = res?.data?.token || res?.token;
+        }
+
+        // 2. Direct fetch to /api/auth/token endpoint
+        if (!jwtToken) {
+          const clientBase =
+            process.env.NEXT_PUBLIC_BETTER_AUTH_URL || window.location.origin;
+          const tokenRes = await fetch(`${clientBase}/api/auth/token`, {
+            credentials: "include",
+          });
+          if (tokenRes.ok) {
+            const data = await tokenRes.json();
+            jwtToken = data?.token;
+          }
+        }
+
+        if (jwtToken) {
+          requestHeaders["Authorization"] = `Bearer ${jwtToken}`;
         }
       } catch (e) {
         // Fallback silently if token fetch fails (e.g. unauthenticated)
