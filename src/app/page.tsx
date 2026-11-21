@@ -143,7 +143,7 @@ export default function HomePage() {
                   </Button>
                 </Link>
 
-                <Link href="/partner">
+                <Link href="/signup?role=vendor">
                   <Button
                     variant="outline"
                     size="lg"
@@ -301,11 +301,72 @@ export default function HomePage() {
         </PageContainer>
       </section>
 
-      {/* 4. Why Choose PizzaHub & How It Works */}
+      {/* 4. Why Choose PizzaHub? (Required Extra Section 1) */}
       <section className="py-16 sm:py-24 bg-card/60 border-t border-border/50">
         <PageContainer>
           <SectionHeading
-            badge="The PizzaHub Standard"
+            badge="The PizzaHub Advantage"
+            title="Why Choose PizzaHub?"
+            subtitle="We are committed to delivering the ultimate authentic pizza experience, straight from the oven to your dining table."
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4 shadow-xs">
+                <Flame className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+                Authentic Wood-Fired
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Baked in 800°F refractory stone ovens for that iconic blistered, leopard-spotted Neapolitan crust.
+              </p>
+            </div>
+
+            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-600 mb-4 shadow-xs">
+                <ChefHat className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+                Independent Artisans
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Support passionate neighborhood pizzaiolos who craft small-batch slow-fermented organic dough.
+              </p>
+            </div>
+
+            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 mb-4 shadow-xs">
+                <ShieldCheck className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+                Premium Ingredients
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Zero artificial preservatives. Only San Marzano tomatoes, fresh fiordilatte, and extra virgin olive oil.
+              </p>
+            </div>
+
+            <div className="flex flex-col p-6 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/10 text-secondary mb-4 shadow-xs">
+                <Truck className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold font-heading text-foreground mb-1.5">
+                Thermal Express Delivery
+              </h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Rushed in custom heated thermal cases so your crust arrives crisp and the cheese perfectly melted.
+              </p>
+            </div>
+          </div>
+        </PageContainer>
+      </section>
+
+      {/* 5. How PizzaHub Works (Extra Section 2) */}
+      <section className="py-16 sm:py-24 border-t border-border/50">
+        <PageContainer>
+          <SectionHeading
+            badge="Simple 3-Step Process"
             title="How PizzaHub Works"
             subtitle="Ordering authentic artisan pizza has never been faster or easier."
           />

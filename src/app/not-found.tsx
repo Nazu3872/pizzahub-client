@@ -28,10 +28,10 @@ export default function NotFound() {
             <span>Back to Home</span>
           </Button>
         </Link>
-        <Link href="/pizzas">
+        <Link href="/menu">
           <Button variant="outline" className="gap-2 rounded-lg">
             <ArrowLeft className="h-4 w-4" />
-            <span>Browse Pizzas</span>
+            <span>Browse Menu</span>
           </Button>
         </Link>
       </div>

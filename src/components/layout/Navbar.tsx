@@ -46,7 +46,7 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Explore Pizzas", href: "/menu" },
+  { label: "Browse Menu", href: "/menu" },
   { label: "Partner with Us", href: "/signup?role=vendor" },
 ];
 
