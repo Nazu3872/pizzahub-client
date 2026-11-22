@@ -30,6 +30,8 @@ import { PageContainer } from "@/components/shared/PageContainer";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
+import { useSession } from "@/lib/auth-client";
+import { OrderDialog } from "@/components/orders/OrderDialog";
 import { MENU_CATEGORIES } from "@/components/vendor/AddMenuItemDialog";
 
 // Category metadata with clean line icons & artisan descriptions
@@ -62,8 +64,12 @@ const categoryVisuals: Record<string, { icon: React.ComponentType<{ className?: 
 
 export default function HomePage() {
   const router = useRouter();
+  const { data: session, isPending } = useSession();
+  const user = session?.user as any;
   const [featuredItems, setFeaturedItems] = useState<PizzaItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [orderItem, setOrderItem] = useState<any | null>(null);
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
 
   useEffect(() => {
     async function fetchFeatured() {
@@ -96,9 +102,39 @@ export default function HomePage() {
   }, []);
 
   const handleAddToCart = (pizza: PizzaItem) => {
-    toast.success(`Added ${pizza.name} to order cart!`, {
-      description: "Customize your order or proceed to checkout anytime.",
+    // Require authentication before opening the order form
+    if (isPending) {
+      toast.info("Checking your session...", {
+        description: "Please try again in a moment.",
+      });
+      return;
+    }
+    if (!user) {
+      toast.error("Sign in required", {
+        description: "Please sign in to place your pizza order.",
+      });
+      router.push(`/signin?callbackURL=${encodeURIComponent("/")}`);
+      return;
+    }
+    if (user.role !== "customer") {
+      toast.error("Customer account required", {
+        description: "Only customer accounts can place pizza orders.",
+      });
+      return;
+    }
+
+    setOrderItem({
+      id: pizza.id,
+      itemName: pizza.name,
+      name: pizza.name,
+      description: pizza.description,
+      price: pizza.price,
+      images: [pizza.image],
+      image: pizza.image,
+      category: pizza.category,
+      vendorName: pizza.restaurantName,
     });
+    setIsOrderOpen(true);
   };
 
   const handleViewDetails = (pizza: PizzaItem) => {
@@ -411,6 +447,15 @@ export default function HomePage() {
           </div>
         </PageContainer>
       </section>
+
+      <OrderDialog
+        item={orderItem || {}}
+        isOpen={isOrderOpen}
+        onClose={() => {
+          setIsOrderOpen(false);
+          setOrderItem(null);
+        }}
+      />
     </div>
   );
 }

@@ -13,10 +13,12 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { api } from "@/lib/api";
+import { useSession } from "@/lib/auth-client";
 import { PageContainer } from "@/components/shared/PageContainer";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { PizzaCard, PizzaItem } from "@/components/shared/PizzaCard";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { OrderDialog } from "@/components/orders/OrderDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,6 +34,12 @@ import { MENU_CATEGORIES } from "@/components/vendor/AddMenuItemDialog";
 function MenuCatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session, isPending } = useSession();
+  const user = session?.user as any;
+
+  // Order dialog state
+  const [orderItem, setOrderItem] = useState<any | null>(null);
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
 
   // Read initial filter values from URL query string
   const initialCategory = searchParams.get("category") || "all";
@@ -133,9 +141,39 @@ function MenuCatalogContent() {
   };
 
   const handleAddToCart = (pizza: PizzaItem) => {
-    toast.success(`Added ${pizza.name} to cart!`, {
-      description: "Ready to order hot & fresh.",
+    // Require authentication before opening the order form
+    if (isPending) {
+      toast.info("Checking your session...", {
+        description: "Please try again in a moment.",
+      });
+      return;
+    }
+    if (!user) {
+      toast.error("Sign in required", {
+        description: "Please sign in to place your pizza order.",
+      });
+      router.push(`/signin?callbackURL=${encodeURIComponent("/menu")}`);
+      return;
+    }
+    if (user.role !== "customer") {
+      toast.error("Customer account required", {
+        description: "Only customer accounts can place pizza orders.",
+      });
+      return;
+    }
+
+    setOrderItem({
+      id: pizza.id,
+      itemName: pizza.name,
+      name: pizza.name,
+      description: pizza.description,
+      price: pizza.price,
+      images: [pizza.image],
+      image: pizza.image,
+      category: pizza.category,
+      vendorName: pizza.restaurantName,
     });
+    setIsOrderOpen(true);
   };
 
   const handleViewDetails = (pizza: PizzaItem) => {
@@ -314,6 +352,15 @@ function MenuCatalogContent() {
           )}
         </>
       )}
+
+      <OrderDialog
+        item={orderItem || {}}
+        isOpen={isOrderOpen}
+        onClose={() => {
+          setIsOrderOpen(false);
+          setOrderItem(null);
+        }}
+      />
     </PageContainer>
   );
 }
