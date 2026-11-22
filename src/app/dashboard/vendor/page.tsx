@@ -86,7 +86,7 @@ export default function VendorDashboardPage() {
     (i) => i.status === "pending" || i.status === "approved"
   ).length;
 
-  const freeLimitReached = !isPremium && activeCount >= 3;
+  const freeLimitReached = !isPremium && activeCount >= 10;
 
   const handleToggleAvailability = async (id: string, currentStatus: string) => {
     try {
@@ -194,12 +194,12 @@ export default function VendorDashboardPage() {
             />
             <div>
               <p className="text-sm font-bold">
-                Free Plan Capacity: {activeCount} / 3 Active Items Used
+                Free Plan Capacity: {activeCount} / 10 Active Items Used
               </p>
               <p className="text-xs text-muted-foreground">
                 {freeLimitReached
-                  ? "You have reached the maximum 3 active items allowed on the Free Plan. Upgrade to list unlimited items!"
-                  : "You can list up to 3 active items simultaneously on the Free Plan."}
+                  ? "You have reached the maximum 10 active items allowed on the Free Plan. Upgrade to list unlimited items!"
+                  : "You can list up to 10 active items simultaneously on the Free Plan."}
               </p>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function VendorDashboardPage() {
         <StatCard
           title="Active in Menu"
           value={activeCount}
-          description={isPremium ? "Unlimited plan" : "Max 3 active on Free tier"}
+          description={isPremium ? "Unlimited plan" : "Max 10 active on Free tier"}
           icon={<CheckCircle2 className="h-5 w-5 text-emerald-600" />}
         />
         <StatCard

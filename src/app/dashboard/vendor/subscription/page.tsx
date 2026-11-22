@@ -156,7 +156,7 @@ export default function VendorSubscriptionPage() {
               <span>
                 {isPremium
                   ? `Subscription active until: ${formatDate(subStatus?.subscriptionExpiresAt)}`
-                  : "Limited to max 3 active menu items"}
+                  : "Limited to max 10 active menu items"}
               </span>
             </p>
           </div>
@@ -223,7 +223,7 @@ export default function VendorSubscriptionPage() {
           <CardContent className="p-8 pt-4 space-y-3.5 text-sm">
             <div className="flex items-center gap-2.5 text-foreground">
               <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>Up to <strong>3 Active Menu Items</strong></span>
+              <span>Up to <strong>10 Active Menu Items</strong></span>
             </div>
             <div className="flex items-center gap-2.5 text-foreground">
               <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
