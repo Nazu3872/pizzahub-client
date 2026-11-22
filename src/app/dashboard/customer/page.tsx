@@ -119,7 +119,7 @@ export default function CustomerDashboard() {
         <StatCard
           title="Total Spent"
           value={loading ? "--" : formatCurrency(totalSpent)}
-          description="Simulated pizza payments"
+          description="Lifetime order value"
           icon={<DollarSign className="h-5 w-5 text-emerald-600" />}
         />
       </div>

@@ -20,7 +20,7 @@ export default function TermsPage() {
         <section className="space-y-3 pt-4 border-t border-border">
           <h2 className="text-xl font-bold font-heading text-foreground">2. Ordering and Delivery</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            All customer pizza payments are currently simulated for demonstration and hiring evaluation purposes. Vendors prepare and fulfill orders according to scheduled delivery dates.
+            Customer payments are collected on delivery. Vendors prepare and fulfill orders according to the scheduled delivery date and confirmed order status.
           </p>
         </section>
 

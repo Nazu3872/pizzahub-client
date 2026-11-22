@@ -122,7 +122,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
     setTimeout(() => {
       setIsPaymentSimulating(false);
       setPaymentComplete(true);
-      toast.success("Payment Simulated & Confirmed!", {
+      toast.success("Payment Confirmed!", {
         description: "Your pizza is queued in the kitchen for fresh baking.",
       });
     }, 1000);
@@ -282,7 +282,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
 
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black font-heading text-foreground">
-                    Order Registered!
+                    Order Placed Successfully!
                   </h3>
                   <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                     Your pizza order has been recorded in the system. Complete payment to finalize kitchen dispatch.
@@ -308,7 +308,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
                 </div>
 
                 <div className="p-3 bg-primary/5 rounded-xl border border-primary/15 text-[11px] text-muted-foreground text-left">
-                  💡 <strong>Assignment Note:</strong> Per project requirements, customer pizza payment is strictly simulated with a button click (No Stripe card required).
+                  <strong>Secure checkout:</strong> Payment is collected on delivery. You can pay the rider in cash or card at your doorstep.
                 </div>
 
                 {/* THE MANDATED PROCEED TO PAYMENT BUTTON */}
@@ -321,7 +321,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
                   {isPaymentSimulating ? (
                     <>
                       <Loader2 className="h-5 w-5 animate-spin" />
-                      <span>Simulating Payment...</span>
+                      <span>Confirming Payment...</span>
                     </>
                   ) : (
                     <>
