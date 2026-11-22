@@ -41,12 +41,20 @@ client = global._mongoClientAuth;
 
 const db = client.db(dbName);
 
+const baseURL =
+  process.env.BETTER_AUTH_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
+const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim();
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
+
 export const auth = betterAuth({
   database: mongodbAdapter(db, { client }),
   secret: process.env.BETTER_AUTH_SECRET || "default_development_secret_pizzahub_2026",
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  baseURL: baseURL,
   trustedOrigins: [
-    process.env.BETTER_AUTH_URL || "http://localhost:3000",
+    baseURL,
+    "https://pizzahub-client-nazu2.vercel.app",
     "https://*.vercel.app",
     "http://localhost:3000",
   ],
@@ -91,11 +99,11 @@ export const auth = betterAuth({
   },
 
   socialProviders: {
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+    ...(googleClientId && googleClientSecret
       ? {
           google: {
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: googleClientId,
+            clientSecret: googleClientSecret,
           },
         }
       : {}),
