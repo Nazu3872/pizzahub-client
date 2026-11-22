@@ -39,6 +39,7 @@ import {
   Pizza,
   ArrowLeft,
   Store,
+  Phone,
 } from "lucide-react";
 
 export default function VendorOrdersPage() {
@@ -214,6 +215,12 @@ export default function VendorOrdersPage() {
                             <p className="text-xs text-muted-foreground truncate max-w-[150px]">
                               {order.customer?.email}
                             </p>
+                            {order.phone && (
+                              <p className="text-xs font-medium text-emerald-600 flex items-center gap-1">
+                                <Phone className="h-3 w-3" />
+                                <span>{order.phone}</span>
+                              </p>
+                            )}
                           </div>
                         </div>
                       </TableCell>

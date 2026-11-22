@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 import { OrderStatusTimeline } from "./OrderStatusTimeline";
-import { MapPin, Calendar, Store, MessageSquare, DollarSign, Clock } from "lucide-react";
+import { MapPin, Calendar, Store, MessageSquare, DollarSign, Clock, Phone } from "lucide-react";
 
 interface OrderDetailsDialogProps {
   order: any | null;
@@ -105,6 +105,18 @@ export function OrderDetailsDialog({
               <span className="text-foreground">{order.deliveryAddress}</span>
             </div>
           </div>
+
+          {order.phone && (
+            <div className="flex items-start gap-2.5 text-muted-foreground">
+              <Phone className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div>
+                <span className="font-semibold text-foreground block text-xs">Contact Phone:</span>
+                <a href={`tel:${order.phone}`} className="text-foreground hover:text-primary">
+                  {order.phone}
+                </a>
+              </div>
+            </div>
+          )}
 
           {order.vendor?.businessName && (
             <div className="flex items-start gap-2.5 text-muted-foreground">

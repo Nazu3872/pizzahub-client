@@ -26,6 +26,7 @@ import {
   ArrowRight,
   Loader2,
   Store,
+  Phone,
 } from "lucide-react";
 
 interface OrderDialogProps {
@@ -41,6 +42,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
   const todayStr = new Date().toISOString().split("T")[0];
   const [deliveryDate, setDeliveryDate] = useState(todayStr);
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -52,6 +54,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
   const resetForm = () => {
     setDeliveryDate(todayStr);
     setDeliveryAddress("");
+    setPhone("");
     setMessage("");
     setPlacedOrder(null);
     setIsPaymentSimulating(false);
@@ -78,6 +81,11 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
       toast.error("Please enter a valid delivery address (min 5 characters)");
       return;
     }
+    const phoneDigits = phone.replace(/\D/g, "");
+    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+      toast.error("Please enter a valid phone number (10-15 digits)");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -85,6 +93,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
         itemId: item.id || item._id,
         deliveryDate,
         deliveryAddress: deliveryAddress.trim(),
+        phone: phone.trim(),
         message: message.trim(),
       });
 
@@ -193,6 +202,26 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
                   required
                   className="rounded-xl text-sm font-medium"
                 />
+              </div>
+
+              {/* Phone Number */}
+              <div className="space-y-1.5">
+                <Label htmlFor="phone" className="text-xs font-bold flex items-center gap-1.5">
+                  <Phone className="h-3.5 w-3.5 text-emerald-600" />
+                  <span>Phone Number <span className="text-destructive">*</span></span>
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="e.g. +880 1700-000000"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  className="rounded-xl font-medium"
+                />
+                <p className="text-[11px] text-muted-foreground">
+                  Rider will call this number on delivery.
+                </p>
               </div>
 
               {/* Additional Message */}
