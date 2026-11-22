@@ -97,10 +97,20 @@ export default function SignInPage() {
   const handleGoogleSignIn = async () => {
     try {
       setGoogleLoading(true);
-      await signIn.social({
+      const res = await signIn.social({
         provider: "google",
         callbackURL: "/dashboard/customer",
       });
+
+      if (res?.error) {
+        toast.error("Google Sign-In Unavailable", {
+          description:
+            res.error.message?.includes("not found")
+              ? "Google OAuth is not configured on this server. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to environment variables."
+              : res.error.message || "Failed to initiate Google sign-in.",
+        });
+        setGoogleLoading(false);
+      }
     } catch (err: any) {
       toast.error("Google Sign-In Error", {
         description: err.message || "Failed to initiate Google login.",
