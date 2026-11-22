@@ -41,9 +41,24 @@ client = global._mongoClientAuth;
 
 const db = client.db(dbName);
 
-const baseURL =
-  process.env.BETTER_AUTH_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+const getBaseURL = () => {
+  // If running in production or on Vercel, never use localhost
+  if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+    if (process.env.BETTER_AUTH_URL && !process.env.BETTER_AUTH_URL.includes("localhost")) {
+      return process.env.BETTER_AUTH_URL.replace(/\/$/, "");
+    }
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+      return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.replace(/\/$/, "")}`;
+    }
+    if (process.env.VERCEL_URL) {
+      return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
+    }
+    return "https://pizzahub-client-nazu2.vercel.app";
+  }
+  return (process.env.BETTER_AUTH_URL || "http://localhost:3000").replace(/\/$/, "");
+};
+
+const baseURL = getBaseURL();
 
 const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim();
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
@@ -55,6 +70,7 @@ export const auth = betterAuth({
   trustedOrigins: [
     baseURL,
     "https://pizzahub-client-nazu2.vercel.app",
+    "https://pizzahub-client-five.vercel.app",
     "https://*.vercel.app",
     "http://localhost:3000",
   ],
