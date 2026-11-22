@@ -172,6 +172,7 @@ export default function CustomerOrdersPage() {
               <TableHeader className="bg-muted/50">
                 <TableRow>
                   <TableHead className="font-bold">Pizza & Kitchen</TableHead>
+                  <TableHead className="font-bold">Request Date</TableHead>
                   <TableHead className="font-bold">Delivery Date</TableHead>
                   <TableHead className="font-bold">Address</TableHead>
                   <TableHead className="font-bold">Total Price</TableHead>
@@ -201,6 +202,22 @@ export default function CustomerOrdersPage() {
                               <span>{order.vendor?.businessName || "Artisan Kitchen"}</span>
                             </p>
                           </div>
+                        </div>
+                      </TableCell>
+
+                      {/* Request Date */}
+                      <TableCell className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                        <div className="flex items-center gap-1.5">
+                          <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span>
+                            {order.createdAt
+                              ? new Date(order.createdAt).toLocaleDateString("en-GB", {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                })
+                              : "—"}
+                          </span>
                         </div>
                       </TableCell>
 

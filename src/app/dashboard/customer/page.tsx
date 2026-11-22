@@ -18,6 +18,7 @@ import {
   Pizza,
   Calendar,
   CheckCircle2,
+  XCircle,
   DollarSign,
 } from "lucide-react";
 
@@ -56,6 +57,7 @@ export default function CustomerDashboard() {
   const totalOrders = stats?.totalOrders || 0;
   const pendingOrders = stats?.pendingOrders || 0;
   const acceptedOrders = stats?.acceptedOrders || 0;
+  const rejectedOrders = stats?.rejectedOrders || 0;
   const totalSpent = stats?.totalSpent || 0;
 
   return (
@@ -89,7 +91,7 @@ export default function CustomerDashboard() {
       </div>
 
       {/* Real Aggregated Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <StatCard
           title="Total Orders"
           value={loading ? "--" : totalOrders}
@@ -107,6 +109,12 @@ export default function CustomerDashboard() {
           value={loading ? "--" : acceptedOrders}
           description="In the kitchen oven"
           icon={<CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+        />
+        <StatCard
+          title="Rejected"
+          value={loading ? "--" : rejectedOrders}
+          description="Declined by kitchen"
+          icon={<XCircle className="h-5 w-5 text-rose-500" />}
         />
         <StatCard
           title="Total Spent"
