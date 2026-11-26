@@ -77,15 +77,12 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
       toast.error("Delivery date cannot be in the past");
       return;
     }
-    if (!deliveryAddress || deliveryAddress.trim().length < 5) {
-      toast.error("Please enter a valid delivery address (min 5 characters)");
+    if (!deliveryAddress || deliveryAddress.trim().length < 3) {
+      toast.error("Please enter a valid delivery address");
       return;
     }
-    const phoneDigits = phone.replace(/\D/g, "");
-    if (phoneDigits.length < 10 || phoneDigits.length > 15) {
-      toast.error("Please enter a valid phone number (10-15 digits)");
-      return;
-    }
+
+    const finalPhone = phone.trim() || "01700000000";
 
     setIsSubmitting(true);
     try {
@@ -93,7 +90,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
         itemId: item.id || item._id,
         deliveryDate,
         deliveryAddress: deliveryAddress.trim(),
-        phone: phone.trim(),
+        phone: finalPhone,
         message: message.trim(),
       });
 
@@ -208,7 +205,7 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
               <div className="space-y-1.5">
                 <Label htmlFor="phone" className="text-xs font-bold flex items-center gap-1.5">
                   <Phone className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>Phone Number <span className="text-destructive">*</span></span>
+                  <span>Phone Number (Optional)</span>
                 </Label>
                 <Input
                   id="phone"
@@ -216,7 +213,6 @@ export function OrderDialog({ item, isOpen, onClose }: OrderDialogProps) {
                   placeholder="e.g. +880 1700-000000"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  required
                   className="rounded-xl font-medium"
                 />
                 <p className="text-[11px] text-muted-foreground">
