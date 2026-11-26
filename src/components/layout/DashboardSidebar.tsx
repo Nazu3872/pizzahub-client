@@ -33,11 +33,38 @@ interface SidebarProps {
 export function DashboardShell({ children }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const user = session?.user as any;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const role = user?.role || "customer";
+
+  // Enforce role-based dashboard access (URL manipulation guard)
+  React.useEffect(() => {
+    if (isPending || !session?.user) return;
+    const userRole = (session.user as any)?.role || "customer";
+
+    if (pathname.startsWith("/dashboard/admin") && userRole !== "admin") {
+      toast.error("Access Denied", {
+        description: "You do not have administrative permissions to access the Admin Console.",
+      });
+      router.replace(userRole === "vendor" ? "/dashboard/vendor" : "/dashboard/customer");
+    } else if (
+      pathname.startsWith("/dashboard/vendor") &&
+      userRole !== "vendor" &&
+      userRole !== "admin"
+    ) {
+      toast.error("Access Denied", {
+        description: "This portal is reserved for registered restaurant vendors.",
+      });
+      router.replace("/dashboard/customer");
+    } else if (
+      pathname.startsWith("/dashboard/customer") &&
+      userRole === "vendor"
+    ) {
+      router.replace("/dashboard/vendor");
+    }
+  }, [pathname, session, isPending, router]);
 
   const handleSignOut = async () => {
     try {
